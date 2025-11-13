@@ -1,0 +1,658 @@
+/* Общие стили для админских компонентов */
+
+.admin-section {
+  width: 100%;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border-color);
+  transition: border-color 0.3s ease;
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.loading-text {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+/* Таблицы */
+.data-table-container {
+  overflow-x: auto;
+  border-radius: 16px;
+  border: 2px solid var(--border-color);
+  background: var(--bg-primary);
+  box-shadow: 0 1px 4px var(--shadow);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--bg-primary);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+.data-table thead {
+  background: transparent;
+}
+
+.data-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 2px solid var(--border-color);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.data-table thead tr:first-child th:first-child {
+  border-top-left-radius: 16px;
+}
+
+.data-table thead tr:first-child th:last-child {
+  border-top-right-radius: 16px;
+}
+
+.data-table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 16px;
+}
+
+.data-table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 16px;
+}
+
+.data-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.data-table tbody tr:nth-child(even) {
+  background: var(--bg-secondary);
+}
+
+.data-table tbody tr:hover {
+  background: rgba(102, 126, 234, 0.08);
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.table-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  transition: border-color 0.3s ease;
+}
+
+.comment-cell {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.details-cell {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Кнопки */
+.btn-primary,
+.btn-secondary,
+.btn-edit,
+.btn-delete {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(85, 107, 47, 0.3);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: var(--primary-color);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: var(--primary-hover);
+}
+
+.btn-edit {
+  background: var(--primary-color);
+  color: white;
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  border-radius: 12px;
+}
+
+.btn-edit:hover {
+  background: var(--primary-hover);
+}
+
+.btn-delete {
+  background: var(--error-color);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+}
+
+.btn-delete:hover {
+  background: #a03513;
+}
+
+/* Модальные окна */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+
+.admin-modal {
+  background: var(--bg-primary);
+  border-radius: 20px;
+  padding: 2rem;
+  min-width: 500px;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px var(--shadow-hover);
+  transition: background-color 0.3s ease;
+}
+
+.admin-modal h3 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(85, 107, 47, 0.1);
+}
+
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
+  border-color: var(--error-color);
+}
+
+.error-message {
+  display: block;
+  color: var(--error-color);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+  transition: border-color 0.3s ease;
+}
+
+/* Заказы */
+.orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.order-card {
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.2s;
+}
+
+.order-card:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  transition: border-color 0.3s ease;
+}
+
+.order-header h3 {
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.order-date {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.order-info {
+  margin-bottom: 1rem;
+}
+
+.order-info p {
+  margin: 0.5rem 0;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+.order-items {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+  transition: border-color 0.3s ease;
+}
+
+.order-items h4 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+.btn-view-details {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-view-details:hover {
+  background: #5568d3;
+}
+
+/* Бэкапы */
+.backups-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.backup-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  transition: all 0.2s;
+}
+
+.backup-item:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.backup-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-primary);
+}
+
+.backup-details {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+
+.backup-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.empty-hint {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+/* Бейджи и метки */
+.role-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.role-1 {
+  background: #dc3545;
+  color: white;
+}
+
+.role-2 {
+  background: #ffc107;
+  color: #1a1a1a;
+}
+
+.role-3 {
+  background: #28a745;
+  color: white;
+}
+
+.action-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: transparent;
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.rating {
+  font-size: 1rem;
+}
+
+.filter-select {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+@media (max-width: 768px) {
+  .admin-modal {
+    min-width: auto;
+    width: 90%;
+    padding: 1.5rem;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .orders-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .backup-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .backup-details {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* Минимализм: хаки-схема для админки - адаптировано для темной темы */
+.admin-section {
+  background: transparent;
+  padding: 40px 0;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+.section-header {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  margin-bottom: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  transition: color 0.3s ease;
+}
+.section-header h2 {
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 1.8rem;
+  margin: 0;
+  letter-spacing: 0.02em;
+  transition: color 0.3s ease;
+}
+.data-table-container {
+  background: var(--bg-primary);
+  border-radius: 16px;
+  border: 2px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 1px 4px var(--shadow);
+}
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', 'Ubuntu', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.data-table th, .data-table td {
+  background: transparent;
+  font-size: 1rem;
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid var(--border-color);
+  transition: border-color 0.3s ease;
+}
+.data-table th {
+  color: var(--text-secondary);
+  font-weight: 400;
+  background: transparent;
+  border-bottom: 2px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+.data-table td {
+  color: var(--text-primary);
+  font-weight: 400;
+  transition: color 0.3s ease;
+}
+.data-table tbody tr:nth-child(even) {
+  background: var(--bg-secondary);
+  transition: background-color 0.3s ease;
+}
+
+.data-table tbody tr:hover {
+  background: rgba(102, 126, 234, 0.15);
+  transition: background-color 0.3s ease;
+}
+
+/* Для светлой темы - более яркий эффект наведения */
+[data-theme="light"] .data-table tbody tr:hover {
+  background: rgba(102, 126, 234, 0.2);
+}
+
+/* Для темной темы - более мягкий эффект */
+[data-theme="dark"] .data-table tbody tr:hover {
+  background: rgba(102, 126, 234, 0.1);
+}
+.btn-primary, .btn-secondary, .btn-edit, .btn-delete {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0.45em 1.3em;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: none;
+}
+.btn-primary:hover, .btn-edit:hover, .btn-secondary:hover, .btn-delete:hover {
+  background: rgba(102, 126, 234, 0.1);
+  color: var(--text-primary);
+  border-color: #667eea;
+}
+.btn-edit { background: var(--bg-primary); color: var(--text-primary);}
+.btn-delete { background: var(--bg-primary); color: #dc3545;}
+.empty-state, .loading-text {
+  background: none;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
+}
+.admin-modal {
+  background: var(--bg-primary);
+  box-shadow: 0 20px 60px var(--shadow-hover);
+  border-radius: 16px;
+  min-width: 350px; max-width: 520px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.modal-actions { border-top: 1px solid var(--border-color); gap: 0.8rem; transition: border-color 0.3s ease;}
+.form-group label {
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+.form-group input, .form-group select, .form-group textarea {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border-radius: 12px;
+  border: 2px solid var(--border-color);
+  box-shadow: none;
+  font-family: 'Inter', 'Ubuntu', sans-serif;
+  transition: all 0.3s ease;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  background: var(--bg-primary);
+  outline: 2px solid var(--border-color);
+  border-color: var(--primary-color);
+}
+
+.form-group input.error, .form-group select.error, .form-group textarea.error {
+  border-color: var(--error-color);
+}
+.role-badge, .action-badge {
+  background: transparent;
+  color: var(--text-primary);
+  border-radius: 16px;
+  font-size: 0.92em;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+

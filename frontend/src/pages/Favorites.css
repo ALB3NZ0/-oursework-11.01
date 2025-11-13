@@ -1,0 +1,238 @@
+.favorites-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.page-title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.page-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.spinner {
+  border: 3px solid #e3f2fd;
+  border-top: 3px solid #2196F3;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.favorite-item {
+  background: var(--bg-primary);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px var(--shadow);
+  transition: all 0.3s;
+}
+
+.favorite-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.favorite-image {
+  width: 100%;
+  height: 240px;
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: var(--text-tertiary);
+}
+
+.favorite-image-img {
+  width: 100%;
+  height: 240px;
+  object-fit: contain;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border: 2px solid var(--border-color);
+  padding: 30px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+/* Обработка белого фона изображений в темной теме */
+[data-theme="dark"] .favorite-image-img {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+  padding: 20px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+  filter: brightness(1.05);
+}
+
+.favorite-item h3 {
+  padding: 1.5rem 1.5rem 0.75rem;
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.favorite-item p {
+  padding: 0 1.5rem;
+  margin: 0.5rem 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.item-price {
+  font-weight: 700;
+  color: #667eea;
+  font-size: 1.3rem;
+}
+
+.favorite-actions {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.favorite-add-to-basket-btn,
+.remove-btn {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+}
+
+.favorite-add-to-basket-btn {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  color: white;
+}
+
+.favorite-add-to-basket-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+}
+
+.remove-btn {
+  background: #e9ecef;
+  color: #6c757d;
+}
+
+.remove-btn:hover {
+  background: #dee2e6;
+}
+
+/* Tablet Styles (481px - 1024px) */
+@media (max-width: 1024px) {
+  .favorites-container {
+    padding: 1.5rem;
+  }
+
+  .favorites-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .favorite-image,
+  .favorite-image-img {
+    height: 220px;
+    padding: 20px;
+  }
+}
+
+/* Mobile Styles (до 768px) */
+@media (max-width: 768px) {
+  .favorites-container {
+    padding: 1rem;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .favorites-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+
+  .favorite-item {
+    border-radius: 12px;
+  }
+
+  .favorite-image,
+  .favorite-image-img {
+    height: 200px;
+    padding: 15px;
+  }
+
+  .favorite-item h3 {
+    padding: 1rem 1rem 0.5rem;
+    font-size: 1rem;
+  }
+
+  .favorite-item p {
+    padding: 0 1rem;
+    font-size: 0.9rem;
+  }
+
+  .item-price {
+    font-size: 1.2rem;
+  }
+
+  .favorite-actions {
+    padding: 1rem;
+  }
+
+  .favorite-add-to-basket-btn,
+  .remove-btn {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+}
+
+/* Small Mobile (до 480px) */
+@media (max-width: 480px) {
+  .favorites-container {
+    padding: 0.75rem;
+  }
+
+  .page-title {
+    font-size: 1.3rem;
+  }
+
+  .favorites-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .favorite-image,
+  .favorite-image-img {
+    height: 250px;
+  }
+}

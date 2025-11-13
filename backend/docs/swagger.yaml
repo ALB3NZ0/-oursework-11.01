@@ -1,0 +1,2926 @@
+basePath: /
+definitions:
+  handlers.PaginatedResponse:
+    properties:
+      data: {}
+      limit:
+        type: integer
+      page:
+        type: integer
+      total:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  handlers.SupportRequest:
+    properties:
+      email:
+        type: string
+      message:
+        maxLength: 2000
+        minLength: 15
+        type: string
+      name:
+        maxLength: 100
+        minLength: 2
+        type: string
+    required:
+    - email
+    - message
+    - name
+    type: object
+  models.BackupDeleteResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  models.BackupInfo:
+    properties:
+      created:
+        type: string
+      filename:
+        type: string
+      path:
+        type: string
+      size_bytes:
+        type: integer
+      size_mb:
+        type: number
+    type: object
+  models.BackupListResponse:
+    properties:
+      backup_files:
+        items:
+          $ref: '#/definitions/models.BackupInfo'
+        type: array
+      desktop_path:
+        type: string
+      total_files:
+        type: integer
+    type: object
+  models.BackupResponse:
+    properties:
+      file_path:
+        type: string
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  models.Basket:
+    properties:
+      id:
+        type: integer
+      product_size_id:
+        type: integer
+      quantity:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  models.Brand:
+    properties:
+      brand_name:
+        type: string
+      id:
+        type: integer
+    type: object
+  models.Category:
+    properties:
+      category_name:
+        type: string
+      id:
+        type: integer
+    type: object
+  models.Favorite:
+    properties:
+      id:
+        type: integer
+      product_size_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  models.FavoriteItem:
+    properties:
+      id:
+        type: integer
+      image_url:
+        type: string
+      price:
+        type: string
+      product_id:
+        type: integer
+      product_name:
+        type: string
+      product_size_id:
+        type: integer
+      size:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  models.Log:
+    properties:
+      action:
+        type: string
+      created_at:
+        type: string
+      details:
+        type: string
+      entity:
+        type: string
+      entity_id:
+        type: integer
+      id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  models.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  models.Order:
+    properties:
+      id:
+        type: integer
+      order_date:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  models.OrderProduct:
+    properties:
+      id:
+        type: integer
+      order_id:
+        type: integer
+      product_size_id:
+        type: integer
+      quantity:
+        type: integer
+    type: object
+  models.PasswordChangeConfirm:
+    properties:
+      code:
+        type: string
+    required:
+    - code
+    type: object
+  models.PasswordChangeRequest:
+    properties:
+      new_password:
+        minLength: 8
+        type: string
+      old_password:
+        type: string
+    required:
+    - new_password
+    - old_password
+    type: object
+  models.PasswordResetConfirm:
+    properties:
+      code:
+        type: string
+      email:
+        type: string
+      password:
+        minLength: 8
+        type: string
+    required:
+    - code
+    - email
+    - password
+    type: object
+  models.PasswordResetRequest:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
+  models.PasswordResponse:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  models.Product:
+    properties:
+      brand_id:
+        type: integer
+      category_id:
+        type: integer
+      id:
+        type: integer
+      image_url:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  models.ProductSize:
+    properties:
+      id:
+        type: integer
+      id_product:
+        type: integer
+      quantity:
+        type: integer
+      size:
+        type: integer
+    type: object
+  models.Report:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      report_data:
+        type: string
+      report_name:
+        type: string
+      report_type:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  models.Review:
+    properties:
+      comment:
+        type: string
+      date:
+        type: string
+      id:
+        type: integer
+      product_id:
+        type: integer
+      rating:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  models.User:
+    properties:
+      email:
+        type: string
+      fullname:
+        type: string
+      id:
+        type: integer
+      password_hash:
+        type: string
+      role_id:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API для интернет-магазина обуви
+  title: Shoes Store API
+  version: "1.0"
+paths:
+  /:
+    get:
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Hello, world!
+          schema:
+            type: string
+      summary: Приветствие
+      tags:
+      - General
+  /admin/backup:
+    post:
+      consumes:
+      - application/json
+      description: Создает полный бэкап базы данных и сохраняет его в папку проекта
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BackupResponse'
+        "400":
+          description: Ошибка валидации
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Создание бэкапа базы данных
+      tags:
+      - Admin Backup
+  /admin/backup/{filename}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет указанный файл бэкапа из папки проекта
+      parameters:
+      - description: Имя файла бэкапа
+        in: path
+        name: filename
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BackupDeleteResponse'
+        "400":
+          description: Неверный формат файла
+          schema:
+            type: string
+        "404":
+          description: Файл бэкапа не найден
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Удаление файла бэкапа
+      tags:
+      - Admin Backup
+  /admin/backup/download/{filename}:
+    get:
+      description: Скачивает указанный файл бэкапа
+      parameters:
+      - description: Имя файла бэкапа
+        in: path
+        name: filename
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: SQL файл бэкапа
+          schema:
+            type: file
+        "400":
+          description: Неверный формат файла
+          schema:
+            type: string
+        "404":
+          description: Файл бэкапа не найден
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Скачать файл бэкапа
+      tags:
+      - Admin Backup
+  /admin/backup/info:
+    get:
+      consumes:
+      - application/json
+      description: Получает список всех доступных файлов бэкапа в папке проекта
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BackupListResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получение информации о бэкапах
+      tags:
+      - Admin Backup
+  /admin/backup/restore:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Восстанавливает базу данных из указанного файла бэкапа
+      parameters:
+      - description: SQL файл бэкапа
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BackupResponse'
+        "400":
+          description: Неверный формат файла
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Восстановить базу данных из бэкапа
+      tags:
+      - Admin Backup
+  /admin/brands:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Brand'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить все бренды (Admin)
+      tags:
+      - Admin Brands
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные бренда
+        in: body
+        name: brand
+        required: true
+        schema:
+          $ref: '#/definitions/models.Brand'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Brand'
+        "400":
+          description: Invalid request body
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Создать бренд (Admin)
+      tags:
+      - Admin Brands
+  /admin/brands/{id}:
+    delete:
+      parameters:
+      - description: Brand ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Brand not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Удалить бренд (Admin)
+      tags:
+      - Admin Brands
+    get:
+      parameters:
+      - description: Brand ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Brand'
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Brand not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить бренд по ID (Admin)
+      tags:
+      - Admin Brands
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Brand ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновлённые данные бренда
+        in: body
+        name: brand
+        required: true
+        schema:
+          $ref: '#/definitions/models.Brand'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Brand'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Brand not found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Обновить бренд (Admin)
+      tags:
+      - Admin Brands
+  /admin/categories:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Category'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить все категории (Admin)
+      tags:
+      - Admin Categories
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные категории
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/models.Category'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Category'
+        "400":
+          description: Invalid request body
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Создать категорию (Admin)
+      tags:
+      - Admin Categories
+  /admin/categories/{id}:
+    delete:
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Category not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Удалить категорию (Admin)
+      tags:
+      - Admin Categories
+    get:
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Category'
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Category not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить категорию по ID (Admin)
+      tags:
+      - Admin Categories
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновлённые данные категории
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/models.Category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Category'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Category not found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Обновить категорию (Admin)
+      tags:
+      - Admin Categories
+  /admin/logs:
+    get:
+      parameters:
+      - description: Номер страницы (по умолчанию 1)
+        in: query
+        name: page
+        type: integer
+      - description: Количество элементов на странице (по умолчанию 20, максимум 100)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.PaginatedResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить все логи (Admin, с пагинацией)
+      tags:
+      - Admin Logs
+  /admin/logs/{id}:
+    delete:
+      parameters:
+      - description: Log ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Log not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Удалить лог (Admin)
+      tags:
+      - Admin Logs
+    get:
+      parameters:
+      - description: Log ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Log'
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Log not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить лог по ID (Admin)
+      tags:
+      - Admin Logs
+  /admin/products:
+    get:
+      parameters:
+      - description: Номер страницы (по умолчанию 1)
+        in: query
+        name: page
+        type: integer
+      - description: Количество элементов на странице (по умолчанию 20, максимум 100)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.PaginatedResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить все товары (Admin, с пагинацией)
+      tags:
+      - Admin Products
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные товара
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Product'
+        "400":
+          description: Invalid request body
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Создать товар (Admin)
+      tags:
+      - Admin Products
+  /admin/products/{id}:
+    delete:
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Product not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Удалить товар (Admin)
+      tags:
+      - Admin Products
+    get:
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Product not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить товар по ID (Admin)
+      tags:
+      - Admin Products
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновлённые данные товара
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Product not found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Обновить товар (Admin)
+      tags:
+      - Admin Products
+  /admin/reviews:
+    get:
+      parameters:
+      - description: Номер страницы (по умолчанию 1)
+        in: query
+        name: page
+        type: integer
+      - description: Количество элементов на странице (по умолчанию 20, максимум 100)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.PaginatedResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить все отзывы (Admin, с пагинацией)
+      tags:
+      - Admin Reviews
+  /admin/reviews/{id}:
+    delete:
+      parameters:
+      - description: Review ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Review not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Удалить отзыв (Admin)
+      tags:
+      - Admin Reviews
+    get:
+      parameters:
+      - description: Review ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Review'
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Review not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить отзыв по ID (Admin)
+      tags:
+      - Admin Reviews
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Review ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Review data
+        in: body
+        name: review
+        required: true
+        schema:
+          $ref: '#/definitions/models.Review'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Review'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Review not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Обновить отзыв (Admin)
+      tags:
+      - Admin Reviews
+  /admin/users:
+    get:
+      parameters:
+      - description: Номер страницы (по умолчанию 1)
+        in: query
+        name: page
+        type: integer
+      - description: Количество элементов на странице (по умолчанию 20, максимум 100)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.PaginatedResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить всех пользователей (Admin, с пагинацией)
+      tags:
+      - Admin Users
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Новый пользователь
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Создать пользователя (Admin)
+      tags:
+      - Admin Users
+  /admin/users/{id}:
+    delete:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Удалить пользователя (Admin)
+      tags:
+      - Admin Users
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить пользователя по ID (Admin)
+      tags:
+      - Admin Users
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновлённые данные пользователя
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Обновить пользователя (Admin)
+      tags:
+      - Admin Users
+  /basket:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Basket item
+        in: body
+        name: basket
+        required: true
+        schema:
+          $ref: '#/definitions/models.Basket'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Basket'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Добавить товар в корзину
+      tags:
+      - Basket
+  /basket/{id}:
+    delete:
+      parameters:
+      - description: Basket ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Удалить товар из корзины
+      tags:
+      - Basket
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Basket ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Basket item
+        in: body
+        name: basket
+        required: true
+        schema:
+          $ref: '#/definitions/models.Basket'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Basket'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Обновить количество в корзине
+      tags:
+      - Basket
+  /basket/{user_id}:
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Basket'
+            type: array
+        "400":
+          description: Invalid User ID
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить корзину пользователя
+      tags:
+      - Basket
+  /brands:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Brand'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Получить все бренды
+      tags:
+      - Brands
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Brand data
+        in: body
+        name: brand
+        required: true
+        schema:
+          $ref: '#/definitions/models.Brand'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Brand'
+        "400":
+          description: Invalid request body
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Создать бренд
+      tags:
+      - Brands
+  /brands/{id}:
+    delete:
+      parameters:
+      - description: Brand ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Brand not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Удалить бренд
+      tags:
+      - Brands
+    get:
+      parameters:
+      - description: Brand ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Brand'
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Brand not found
+          schema:
+            type: string
+      summary: Получить бренд по ID
+      tags:
+      - Brands
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Brand ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Brand data
+        in: body
+        name: brand
+        required: true
+        schema:
+          $ref: '#/definitions/models.Brand'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Brand'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Обновить бренд
+      tags:
+      - Brands
+  /categories:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Category'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Получить все категории
+      tags:
+      - Categories
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Category data
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/models.Category'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Category'
+        "400":
+          description: Invalid request body
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Создать категорию
+      tags:
+      - Categories
+  /categories/{id}:
+    delete:
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Category not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Удалить категорию
+      tags:
+      - Categories
+    get:
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Category'
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Category not found
+          schema:
+            type: string
+      summary: Получить категорию по ID
+      tags:
+      - Categories
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Category data
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/models.Category'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Category'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Обновить категорию
+      tags:
+      - Categories
+  /favorites:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Favorite item
+        in: body
+        name: favorite
+        required: true
+        schema:
+          $ref: '#/definitions/models.Favorite'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Favorite'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Добавить товар в избранное
+      tags:
+      - Favorites
+  /favorites/{id}:
+    delete:
+      parameters:
+      - description: Favorite ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Удалить товар из избранного
+      tags:
+      - Favorites
+  /favorites/{user_id}:
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.FavoriteItem'
+            type: array
+        "400":
+          description: Invalid User ID
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить избранные товары пользователя
+      tags:
+      - Favorites
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Проверяет email и пароль пользователя
+      parameters:
+      - description: Данные для входа
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Invalid email or password
+          schema:
+            type: string
+      summary: Логин пользователя
+      tags:
+      - Auth
+  /logs:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Log'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Получить все логи действий
+      tags:
+      - Logs
+  /logs/{id}:
+    get:
+      parameters:
+      - description: Log ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Log'
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Log not found
+          schema:
+            type: string
+      summary: Получить лог по ID
+      tags:
+      - Logs
+  /order-products:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.OrderProduct'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Получить все товары всех заказов
+      tags:
+      - OrderProducts
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные для добавления
+        in: body
+        name: order_product
+        required: true
+        schema:
+          $ref: '#/definitions/models.OrderProduct'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.OrderProduct'
+        "400":
+          description: Invalid request body
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Добавить товар в заказ
+      tags:
+      - OrderProducts
+  /order-products/{id}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: OrderProduct ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Новое количество
+        in: body
+        name: quantity
+        required: true
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.OrderProduct'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Обновить количество товара в заказе
+      tags:
+      - OrderProducts
+  /order-products/order/{order_id}:
+    get:
+      parameters:
+      - description: Order ID
+        in: path
+        name: order_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.OrderProduct'
+            type: array
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Not found
+          schema:
+            type: string
+      summary: Получить товары по заказу
+      tags:
+      - OrderProducts
+  /orders:
+    get:
+      parameters:
+      - description: Номер страницы (по умолчанию 1)
+        in: query
+        name: page
+        type: integer
+      - description: Количество элементов на странице (по умолчанию 20, максимум 100)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.PaginatedResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Получить все заказы (с пагинацией)
+      tags:
+      - Orders
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Order data
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/models.Order'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Order'
+        "400":
+          description: Invalid request body
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Создать новый заказ
+      tags:
+      - Orders
+  /orders/{id}:
+    get:
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Order not found
+          schema:
+            type: string
+      summary: Получить заказ по ID
+      tags:
+      - Orders
+  /orders/user/{user_id}:
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      - description: Номер страницы (по умолчанию 1)
+        in: query
+        name: page
+        type: integer
+      - description: Количество элементов на странице (по умолчанию 20, максимум 100)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.PaginatedResponse'
+        "400":
+          description: Invalid User ID
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить заказы пользователя (с пагинацией)
+      tags:
+      - Orders
+  /password/change:
+    post:
+      consumes:
+      - application/json
+      description: Инициирует смену пароля с отправкой кода подтверждения на email
+      parameters:
+      - description: Данные для смены пароля
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.PasswordChangeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.PasswordResponse'
+        "400":
+          description: Ошибка валидации
+          schema:
+            type: string
+        "401":
+          description: Неверный текущий пароль
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Смена пароля
+      tags:
+      - Password
+  /password/change/confirm:
+    post:
+      consumes:
+      - application/json
+      description: Подтверждает смену пароля по коду из email
+      parameters:
+      - description: Код подтверждения
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.PasswordChangeConfirm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.PasswordResponse'
+        "400":
+          description: Ошибка валидации
+          schema:
+            type: string
+        "404":
+          description: Код не найден или истек
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Подтверждение смены пароля
+      tags:
+      - Password
+  /password/reset:
+    post:
+      consumes:
+      - application/json
+      description: Отправляет 6-значный код восстановления пароля на указанный email
+      parameters:
+      - description: Email для восстановления пароля
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.PasswordResetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.PasswordResponse'
+        "400":
+          description: Ошибка валидации
+          schema:
+            type: string
+        "404":
+          description: Пользователь не найден
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      summary: Запрос восстановления пароля
+      tags:
+      - Password
+  /password/reset/confirm:
+    post:
+      consumes:
+      - application/json
+      description: Подтверждает код восстановления и устанавливает новый пароль
+      parameters:
+      - description: Данные для восстановления пароля
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.PasswordResetConfirm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.PasswordResponse'
+        "400":
+          description: Ошибка валидации
+          schema:
+            type: string
+        "404":
+          description: Код не найден или истек
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      summary: Подтверждение восстановления пароля
+      tags:
+      - Password
+  /products:
+    get:
+      parameters:
+      - description: Номер страницы (по умолчанию 1)
+        in: query
+        name: page
+        type: integer
+      - description: Количество элементов на странице (по умолчанию 20, максимум 100)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.PaginatedResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Получить все продукты (с пагинацией)
+      tags:
+      - Products
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные продукта
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Product'
+        "400":
+          description: Invalid request body
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Создать продукт
+      tags:
+      - Products
+  /products/{id}:
+    delete:
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Product not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Удалить продукт
+      tags:
+      - Products
+    get:
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Product not found
+          schema:
+            type: string
+      summary: Получить продукт по ID
+      tags:
+      - Products
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Данные продукта
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Обновить продукт
+      tags:
+      - Products
+  /products/{product_id}/sizes:
+    get:
+      parameters:
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ProductSize'
+            type: array
+        "400":
+          description: Invalid Product ID
+          schema:
+            type: string
+        "404":
+          description: Sizes not found
+          schema:
+            type: string
+      summary: Получить размеры для продукта
+      tags:
+      - ProductSizes
+  /productsizes/{id}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ProductSize ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Product Size data
+        in: body
+        name: product_size
+        required: true
+        schema:
+          $ref: '#/definitions/models.ProductSize'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductSize'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Обновить количество размера
+      tags:
+      - ProductSizes
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Создаёт нового пользователя с хэшированным паролем
+      parameters:
+      - description: Данные пользователя
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid request body
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Регистрация пользователя
+      tags:
+      - Auth
+  /reports:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Report'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить все отчёты
+      tags:
+      - Reports
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные отчёта
+        in: body
+        name: report
+        required: true
+        schema:
+          $ref: '#/definitions/models.Report'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Report'
+        "400":
+          description: Invalid request body
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Создать отчёт
+      tags:
+      - Reports
+  /reports/{id}:
+    get:
+      parameters:
+      - description: Report ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Report'
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Report not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить отчёт по ID
+      tags:
+      - Reports
+  /reports/categories/excel:
+    get:
+      produces:
+      - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      responses:
+        "200":
+          description: Excel файл отчета
+          schema:
+            type: file
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Сгенерировать отчет по категориям в Excel
+      tags:
+      - Reports
+  /reports/categories/pdf:
+    get:
+      produces:
+      - application/pdf
+      responses:
+        "200":
+          description: PDF файл отчета
+          schema:
+            type: file
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Сгенерировать отчет по категориям в PDF
+      tags:
+      - Reports
+  /reports/customers/excel:
+    get:
+      produces:
+      - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      responses:
+        "200":
+          description: Excel файл отчета
+          schema:
+            type: file
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Сгенерировать отчет по клиентам в Excel
+      tags:
+      - Reports
+  /reports/customers/pdf:
+    get:
+      produces:
+      - application/pdf
+      responses:
+        "200":
+          description: PDF файл отчета
+          schema:
+            type: file
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Сгенерировать отчет по клиентам в PDF
+      tags:
+      - Reports
+  /reports/customers/text:
+    get:
+      produces:
+      - text/plain; charset=utf-8
+      responses:
+        "200":
+          description: Текстовый отчет
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Сгенерировать отчет по клиентам в текстовом формате
+      tags:
+      - Reports
+  /reports/inventory/excel:
+    get:
+      produces:
+      - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      responses:
+        "200":
+          description: Excel файл отчета
+          schema:
+            type: file
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Сгенерировать отчет по инвентарю в Excel
+      tags:
+      - Reports
+  /reports/inventory/pdf:
+    get:
+      produces:
+      - application/pdf
+      responses:
+        "200":
+          description: PDF файл отчета
+          schema:
+            type: file
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Сгенерировать отчет по инвентарю в PDF
+      tags:
+      - Reports
+  /reports/inventory/text:
+    get:
+      produces:
+      - text/plain; charset=utf-8
+      responses:
+        "200":
+          description: Текстовый отчет
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Сгенерировать отчет по инвентарю в текстовом формате
+      tags:
+      - Reports
+  /reports/sales/excel:
+    get:
+      produces:
+      - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      responses:
+        "200":
+          description: Excel файл отчета
+          schema:
+            type: file
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Сгенерировать отчет по продажам в Excel
+      tags:
+      - Reports
+  /reports/sales/pdf:
+    get:
+      produces:
+      - application/pdf
+      responses:
+        "200":
+          description: PDF файл отчета
+          schema:
+            type: file
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Сгенерировать отчет по продажам в PDF
+      tags:
+      - Reports
+  /reviews:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Review
+        in: body
+        name: review
+        required: true
+        schema:
+          $ref: '#/definitions/models.Review'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Review'
+        "400":
+          description: Invalid request body
+          schema:
+            type: string
+      summary: Добавить отзыв
+      tags:
+      - Reviews
+  /reviews/{id}:
+    delete:
+      parameters:
+      - description: Review ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+      summary: Удалить отзыв
+      tags:
+      - Reviews
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Review ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Review
+        in: body
+        name: review
+        required: true
+        schema:
+          $ref: '#/definitions/models.Review'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Review'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+      summary: Обновить отзыв
+      tags:
+      - Reviews
+  /reviews/product/{id}:
+    get:
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Номер страницы (по умолчанию 1)
+        in: query
+        name: page
+        type: integer
+      - description: Количество элементов на странице (по умолчанию 20, максимум 100)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.PaginatedResponse'
+        "400":
+          description: Invalid Product ID
+          schema:
+            type: string
+      summary: Получить отзывы о продукте (с пагинацией)
+      tags:
+      - Reviews
+  /reviews/user/{id}:
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Номер страницы (по умолчанию 1)
+        in: query
+        name: page
+        type: integer
+      - description: Количество элементов на странице (по умолчанию 20, максимум 100)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.PaginatedResponse'
+        "400":
+          description: Invalid User ID
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить отзывы пользователя (с пагинацией)
+      tags:
+      - Reviews
+  /support:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные сообщения поддержки
+        in: body
+        name: support
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.SupportRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success message
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Validation error
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Отправить сообщение в поддержку
+      tags:
+      - Support
+  /users:
+    get:
+      description: Возвращает список всех пользователей с пагинацией
+      parameters:
+      - description: Номер страницы (по умолчанию 1)
+        in: query
+        name: page
+        type: integer
+      - description: Количество элементов на странице (по умолчанию 20, максимум 100)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.PaginatedResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить всех пользователей (с пагинацией)
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Создаёт нового пользователя (только для админов)
+      parameters:
+      - description: Данные пользователя
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid request body
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Создать пользователя
+      tags:
+      - Users
+  /users/{id}:
+    delete:
+      description: Удаляет пользователя по ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Удалить пользователя
+      tags:
+      - Users
+    get:
+      description: Возвращает одного пользователя по ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Получить пользователя по ID
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные пользователя
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Данные пользователя
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Обновить пользователя
+      tags:
+      - Users
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
