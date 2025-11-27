@@ -6,7 +6,7 @@ import (
     "fmt"
     "net/http"
     "strconv"
-
+    "strings"
     "github.com/gorilla/mux"
     "shoes-store-backend/db"
     "shoes-store-backend/handlers"
@@ -140,6 +140,11 @@ func AdminUpdateReviewHandler(w http.ResponseWriter, r *http.Request) {
     // Проверяем валидность рейтинга (1-5)
     if rev.Rating < 1 || rev.Rating > 5 {
         http.Error(w, "Рейтинг должен быть от 1 до 5", http.StatusBadRequest)
+        return
+    }
+
+    if len(strings.TrimSpace(rev.Comment)) < 5 {
+        http.Error(w, "Комментарий должен содержать минимум 5 символов (без учета пробелов)", http.StatusBadRequest)
         return
     }
 
