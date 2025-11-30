@@ -231,6 +231,12 @@ func parseDatabaseURL(databaseURL string) (*DatabaseParams, error) {
 	
 	hostPort := hostDbParts[0]
 	database := hostDbParts[1]
+
+	// Добавляем эту проверку
+	if strings.Contains(database, "?") {
+		database = strings.Split(database, "?")[0]
+	}
+
 	
 	// Парсим хост и порт
 	var host, port string
@@ -254,18 +260,21 @@ func parseDatabaseURL(databaseURL string) (*DatabaseParams, error) {
 
 // getBackupPath возвращает путь для сохранения бэкапов
 func getBackupPath() (string, error) {
-	// Используем папку проекта для сохранения бэкапов
-	projectPath := "C:\\shoes-store"
-	backupDir := filepath.Join(projectPath, "backups")
-	
-	// Создаем папку backups если не существует
-	if err := os.MkdirAll(backupDir, 0755); err != nil {
-		return "", fmt.Errorf("ошибка создания папки backups: %v", err)
-	}
-	
-	fmt.Printf("📁 Папка для бэкапов: %s\n", backupDir)
-	return backupDir, nil
+    backupDir := os.Getenv("BACKUP_PATH")
+    if backupDir == "" {
+        // fallback на старый путь
+        projectPath := "C:\\shoes-store"
+        backupDir = filepath.Join(projectPath, "backups")
+    }
+
+    if err := os.MkdirAll(backupDir, 0755); err != nil {
+        return "", fmt.Errorf("ошибка создания папки backups: %v", err)
+    }
+
+    fmt.Printf("📁 Папка для бэкапов: %s\n", backupDir)
+    return backupDir, nil
 }
+
 
 // GetBackupInfoHandler получает информацию о доступных бэкапах
 // @Summary Получение информации о бэкапах
